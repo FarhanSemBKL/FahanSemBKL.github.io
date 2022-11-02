@@ -135,23 +135,30 @@
           </div>
           <div class="row justify-content-center mb-3">
             <div class="col-md-6">
-              <form>
+              <div class="alert alert-success alert-dismissible fade show my-alert d-none" role="alert">
+                <strong>Terimakasih!</strong> pesan anda sudah kami terima.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              <form name="farsem-contact-form">
                 <div class="mb-3">
-                  <label for="Name" class="nama lengkap">Email address</label>
-                  <input type="text" class="form-control" id="name" aria-describedby="name">
+                  <label for="name" class="nama lengkap">Nama Lengkap</label>
+                  <input type="text" class="form-control" id="name" aria-describedby="name" name="nama">
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Email </label>
-                  <input type="email" class="form-control" id="email" aria-describedby="email">
+                  <input type="email" class="form-control" id="email" aria-describedby="email" name="email">
                 </div>
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="3"></textarea>
+                <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
               </div>
-                <button type="submit" class="btn btn-danger">Kirim</button>
-                <div class="mb-3">
+                <button type="submit" class="btn btn-primary btn-kirim">Kirim</button>
+                <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
               </form>
             </div>
-          </div>
+          </div> 
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0d6efd" fill-opacity="1" d="M0,64L21.8,69.3C43.6,75,87,85,131,90.7C174.5,96,218,96,262,117.3C305.5,139,349,181,393,197.3C436.4,213,480,203,524,170.7C567.3,139,611,85,655,69.3C698.2,53,742,75,785,122.7C829.1,171,873,245,916,261.3C960,277,1004,235,1047,186.7C1090.9,139,1135,85,1178,85.3C1221.8,85,1265,139,1309,138.7C1352.7,139,1396,85,1418,58.7L1440,32L1440,320L1418.2,320C1396.4,320,1353,320,1309,320C1265.5,320,1222,320,1178,320C1134.5,320,1091,320,1047,320C1003.6,320,960,320,916,320C872.7,320,829,320,785,320C741.8,320,698,320,655,320C610.9,320,567,320,524,320C480,320,436,320,393,320C349.1,320,305,320,262,320C218.2,320,175,320,131,320C87.3,320,44,320,22,320L0,320Z"></path></svg>
       </section>
@@ -163,5 +170,32 @@
       </footer>
     <!-- Akhir Footer -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxT1zaiv-H5QpYX0Auh2Eytt10ixZKSp3nIGL3_w-4fFV_WHdp5VfwFbiiGwv_Su0E/exec'
+      const form = document.forms['farsem-contact-form']
+      const btnKirim = document.querySelector('.btn-kirim')
+      const btnLoading = document.querySelector('.btn-loading')
+      const myAlert = document.querySelector('.my-alert')
+    
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        // ketika tombol submit diklik
+        // tampilkan tombol loading,hilangkan tombol kirim
+        btnLoading.classList.toggle('d-none')
+        btnKirim.classList.toggle('d-none')
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => {
+            // tampilkan tombol kirim,hilangkan tombol loading
+            btnLoading.classList.toggle('d-none')
+            btnKirim.classList.toggle('d-none')
+            // tampilkan alert
+            myAlert.classList.toggle('.d-none')
+            // reset form
+            form.reset();
+            console.log('Success!', response)})
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
   </body>
 </html>
